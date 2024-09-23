@@ -6,7 +6,6 @@ from src.utils import filter_vacancies, sort_vacancies, get_top_vacancies
 class TestUtils(unittest.TestCase):
 
     def setUp(self):
-        # Создаем несколько экземпляров Vacancy для тестов
         self.vacancies = [
             Vacancy(title="Менеджер", link="https://example.com/1", salary={"from": 50000},
                     description="Опыт работы с клиентами", requirements="Коммуникабельность, ответственность"),

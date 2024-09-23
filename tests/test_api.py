@@ -27,7 +27,6 @@ class TestHH(unittest.TestCase):
 
     @patch('src.api.requests.get')
     def test_load_vacancies_failure(self, mock_get):
-        # Настройка мок-ответа на неуспешный запрос
         mock_response = Mock()
         mock_response.status_code = 404
         mock_get.return_value = mock_response
@@ -39,7 +38,6 @@ class TestHH(unittest.TestCase):
 
     @patch('src.api.requests.get')
     def test_load_vacancies_partial_success(self, mock_get):
-        # Настройка мок-ответов для нескольких страниц
         mock_response_success = Mock()
         mock_response_success.status_code = 200
         mock_response_success.json.return_value = {
@@ -53,7 +51,7 @@ class TestHH(unittest.TestCase):
         }
 
         mock_get.side_effect = [mock_response_success,
-                                mock_response_empty]  # Первый запрос успешен, второй возвращает пустой список
+                                mock_response_empty]
 
         hh = HH()
         vacancies = hh.load_vacancies("Курьер")

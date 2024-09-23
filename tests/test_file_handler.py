@@ -2,20 +2,19 @@ import unittest
 import os
 import json
 from src.file_handler import JSONSaver
-from src.vacancies import Vacancy  # Предполагается, что класс Vacancy уже определен
+from src.vacancies import Vacancy
 
 
 class TestJSONSaver(unittest.TestCase):
 
     def setUp(self):
-        self.saver = JSONSaver("test_vacancies.json")  # Используем тестовый файл
+        self.saver = JSONSaver("test_vacancies.json")
         self.vacancy1 = Vacancy(title="Менеджер", link="https://example.com/1", salary={"from": 50000},
                                 description="Работа с клиентами", requirements="Опыт работы с клиентами")
         self.vacancy2 = Vacancy(title="Программист", link="https://example.com/2", salary={"from": 80000},
                                 description="Знания Python", requirements="Опыт разработки на Python")
 
     def tearDown(self):
-        # Удаляем тестовый файл после каждого теста
         if os.path.exists("test_vacancies.json"):
             os.remove("test_vacancies.json")
 
