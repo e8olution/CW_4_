@@ -2,33 +2,30 @@ import requests
 from abc import ABC, abstractmethod
 
 
-class JobAPI(ABC):
+class Parser(ABC):
     @abstractmethod
-    def get_vacancies(self, keyword: str) -> list:
+    def load_vacancies(self, keyword):
         pass
 
 
-class HeadHunterAPI(JobAPI):
-    BASE_URL = "https://api.hh.ru/vacancies"  # Исправленный базовый URL
-
+class HH(Parser):
+    """
+    Класс для работы с API HeadHunter
+    """
     def __init__(self):
-        self.__headers = {"User-Agent": "HH-API-Client"}
+        self.url = 'https://api.hh.ru/vacancies'
+        self.headers = {'User-Agent': 'HH-User-Agent'}
+        self.params = {'text': '', 'page': 0, 'per_page': 100}
+        self.vacancies = []
 
-    def __get(self, params: dict) -> dict:
-        try:
-            response = requests.get(self.BASE_URL, headers=self.__headers, params=params)
-            response.raise_for_status()  # Проверяем статус-код
-        except requests.exceptions.RequestException as e:
-            raise Exception(f"Ошибка подключения: {e}")
-
-        try:
-            return response.json()  # Попытка распарсить JSON
-        except requests.exceptions.JSONDecodeError:
-            print("Ошибка декодирования JSON. Тело ответа сервера:")
-            print(response.text)  # Логируем тело ответа
-            raise Exception("Не удалось распарсить ответ от API в формате JSON.")
-
-    def get_vacancies(self, keyword: str, per_page: int = 20) -> list:
-        params = {"text": keyword, "per_page": per_page}
-        data = self.__get(params)
-        return data.get("items", [])
+    def load_vacancies(self, keyword):
+        self.params['text'] = keyword
+        self.params['page'] = 0
+        while self.params.get('page') != 20:
+            response = requests.get(self.url, headers=self.headers, params=self.params)
+            if response.status_code != 200:
+                break
+            vacancies = response.json()['items']
+            self.vacancies.extend(vacancies)
+            self.params['page'] += 1
+        return self.vacancies

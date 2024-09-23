@@ -1,5 +1,5 @@
 import unittest
-from src.vacancy import Vacancy
+from src.vacancies import Vacancy
 
 
 class TestVacancy(unittest.TestCase):
